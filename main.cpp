@@ -38,20 +38,16 @@ public:
     {
         yInfo()<<"Responding to command";
 
-        //just echo back the command
-        if (command.get(0).asString()=="quit")
-            return false;
-        else
-            reply=command;
-
         //parse input
         if (command.check("period"))
         {
             period=command.find("period").asDouble();
+            reply.addString("ack");
+            return true;
 
         }
 
-        return true;
+        return RFModule::respond(command, reply);
     }
 
     /*
@@ -79,7 +75,7 @@ public:
     */
     bool interruptModule()
     {
-        yInfo()<<"Interrupting your module, for port cleanup";
+        yInfo()<<"Interrupting your module";
         return true;
     }
 
