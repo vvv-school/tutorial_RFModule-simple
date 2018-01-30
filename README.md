@@ -57,14 +57,14 @@ Even with this simple code we achieved interesting functionalities. We have an e
 In addition, our module can be terminated `smoothly` by sending a `ctrl+C` signal. This is important if we want to perform shutdown operations like parking the robot, 
 turning off the motors etc.
 
-We will now enhance this module in this way:
+We will now enhance this module with the following functionlities:
 
-- We add a command line parameter  `--period` to change the periodicity 
-- We add an interface to respond to commands from a port, so that we can ask the module to terminate and change period from another module.
+- Change periodicity with command line parameter `--period`
+- Add an interface to respond to commands from a port
 
 ## Parsing command line parameters
 
-An instance of ResourceFinder, `rf`, is initialized with command line parameters `argc`, `argv`. It is easy now easy to lookup parameters from the command line using 
+An instance of ResourceFinder, `rf`, is initialized with command line parameters `argc`, `argv`. It is easy to lookup parameters from the command line using 
 the  following code inside the `RFModule::configure()` function:
 
 ```
@@ -94,7 +94,7 @@ $ ./tutorial_rfmodule-simple --period 2.0
 The module already declares an `RPCServer` port. We now add code to open the port, and configure the module to dispatch messages received from the port 
 to a respond function.
 
-Add the following code within `configure`:
+Add the following code within `configure':
 
 
 ```
@@ -105,11 +105,11 @@ Add the following code within `configure`:
 Add the following function:
 
 ```
-  bool respond(const Bottle& command, Bottle& reply)
+    bool respond(const Bottle& command, Bottle& reply)
     {
         yInfo()<<"Responding to command";
 
-        //parse input and send reply
+        //parse input
         if (command.check("period"))
         {
             period=command.find("period").asDouble();
@@ -118,8 +118,7 @@ Add the following function:
 
         }
 
-        // manage other commands (i.e. quit)
-        return RFModule::respond(command, reply);
+        return return RFModule::respond(command, reply);;
     }
 ```
 
@@ -136,7 +135,7 @@ Response: [bye]
 >>
 ```
 
-The last command will terminate our module. 
+The last command will terminete our module. 
 
 ## Managing termination: cleanup of resources
 Proper termination of a module is a critical issue. The module may be blocked waiting for data from a port or a mutex. Before asking the module to terminate we need to unblock the module. This is done by overriding the function `RFModule::interrupt`:
