@@ -1,6 +1,5 @@
-Tutorial on basic communication in YARP
-=======================================
-
+Tutorial on YARP RFModule
+=========================
 This tutorial will show you YARP support classes for handling command line parameters and writing modules that perform periodic activities and respond to network commands. 
 
 In particular we will use:
@@ -13,7 +12,7 @@ In particular we will use:
  - create a build directory
  - compile and build
 
- ```
+ ```bash
  $ cd tutorial_rfmodule-simple
  $ mkdir build
  $ cd build
@@ -23,18 +22,18 @@ In particular we will use:
 
 # How to run the tutorial
 - make sure yarp server is running (`yarp where`), if not open a terminal and run it :
-```
+```bash
 $ yarpserver --write
 ```
 - open another terminal and switch to the build directory and run the `tutorial_rfmodule-simple`:
 
-```
+```bash
 $ ./tutorial_rfmodule-simple
 ```
 
 The module will start executing the function `updateModule()` with periodicity of 1.0 seconds:
 
-```
+```bash
 $ ./tutorial_RFModule-simple 
 [INFO]Configure module... 
 [INFO]Start module... 
@@ -46,7 +45,7 @@ $ ./tutorial_RFModule-simple
 
 You can now terminate the module by hitting `ctrl+C` at the terminal:
 
-```
+```bash
 ^C[INFO][try 1 of 3] Trying to shut down.
 [INFO]RFModule closing.
 [INFO]RFModule finished.
@@ -67,7 +66,7 @@ We will now enhance this module with the following functionlities:
 An instance of ResourceFinder, `rf`, is initialized with command line parameters `argc`, `argv`. It is easy to lookup parameters from the command line using 
 the  following code inside the `RFModule::configure()` function:
 
-```
+```c++
   bool configure(yarp::os::ResourceFinder &rf)
     {
         count=0;
@@ -84,7 +83,7 @@ the  following code inside the `RFModule::configure()` function:
 
 Recompile and execute. See the different behavior of:
 
-```
+```bash
 $ ./tutorial_rfmodule-simple --period 0.1
 $ ./tutorial_rfmodule-simple --period 2.0
 ```
@@ -97,14 +96,14 @@ to a respond function.
 Add the following code within `configure':
 
 
-```
+```c++
     handlerPort.open("/myModule");
     attach(handlerPort);
 ```
 
 Add the following function:
 
-```
+```c++
     bool respond(const Bottle& command, Bottle& reply)
     {
         yInfo()<<"Responding to command";
@@ -126,7 +125,7 @@ Now all messages received from the port `MyModule` will be dispatched to the met
 
 You can now talk to the respond method using the `yarp rpc` tool, for example:
 
-```
+```bash
 $ yarp rpc /myModule
 >>period 2
 Response: ack
@@ -140,7 +139,7 @@ The last command will terminete our module.
 ## Managing termination: cleanup of resources
 Proper termination of a module is a critical issue. The module may be blocked waiting for data from a port or a mutex. Before asking the module to terminate we need to unblock the module. This is done by overriding the function `RFModule::interrupt`:
 
-```
+```c++
 /*
  * Interrupt function. Use this function to execute
  * operations that need to be done before module shutdown.
@@ -153,7 +152,8 @@ bool interruptModule()
 ```
 
 Other activities need to be done when the module shuts down, before exiting the main function. This is done by overriding the function `RFModule::close`:
-```
+
+```c++
 /*
 * Close function, to perform operation after shutdown
 */
@@ -166,7 +166,7 @@ bool close()
 ```   
 
 Now the behavior of the module when shutting down should be something like this:
-```
+```bash
 [INFO][ 55 ]  updateModule...  
 [INFO][ 56 ]  updateModule...  
 [INFO][ 57 ]  updateModule...  
