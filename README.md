@@ -117,7 +117,9 @@ Add the following function:
 
         }
 
-        return return RFModule::respond(command, reply);;
+        // dispatch received data to the RFModule::respond() function
+        // this function handles the quit message
+        return RFModule::respond(command, reply);
     }
 ```
 
