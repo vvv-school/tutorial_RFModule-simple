@@ -32,27 +32,24 @@ public:
     }
 
     /*
-    * Message handler. Just echo all received messages.
+    * Message handler. Manage period and quit commands.
     */
     bool respond(const Bottle& command, Bottle& reply)
     {
         yInfo()<<"Responding to command";
 
-        //just echo back the command
-        if (command.get(0).asString()=="quit")
-            return false;
-        else
-            reply=command;
-
         //parse input
         if (command.check("period"))
         {
             period=command.find("period").asDouble();
+            reply.addString("ack");
+            return true;
 
         }
 
-        return true;
+        return RFModule::respond(command, reply);
     }
+
 
     /*
     * Configure function. Receive a previously initialized
