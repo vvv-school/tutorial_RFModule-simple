@@ -118,7 +118,7 @@ Add the following function:
 
         }
 
-        return return RFModule::respond(command, reply);;
+        return RFModule::respond(command, reply);
     }
 ```
 
