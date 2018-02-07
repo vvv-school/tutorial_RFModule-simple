@@ -32,7 +32,7 @@ public:
     }
 
     /*
-    * Message handler. Just echo all received messages.
+    * Message handler. Manage period and quit commands.
     */
     bool respond(const Bottle& command, Bottle& reply)
     {
