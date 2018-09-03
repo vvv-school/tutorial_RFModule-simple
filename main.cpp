@@ -41,7 +41,7 @@ public:
         //parse input
         if (command.check("period"))
         {
-            period=command.find("period").asDouble();
+            period=command.find("period").asFloat64();
             reply.addString("ack");
             return true;
 
@@ -66,7 +66,7 @@ public:
         //user resource finder to parse parameter --period
 
         if (rf.check("period"))
-            period=rf.find("period").asDouble();
+            period=rf.find("period").asFloat64();
 
         return true;
     }
